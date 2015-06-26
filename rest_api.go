@@ -8,27 +8,27 @@ import (
 
 var appState state
 
-type getHandler struct {
-}
+type requestHandler func(r *http.Request) interface{}
 
-func (th *getHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(user{Name: "henk", Points: 1337})
-}
-
-type getRequestHandler func() interface{}
-
-func handle(path string, fn getRequestHandler) {
+func handle(path string, fn requestHandler) {
 	http.HandleFunc(path, func(w http.ResponseWriter, r *http.Request) {
-		json.NewEncoder(w).Encode(fn())
+		json.NewEncoder(w).Encode(fn(r))
 	})
 }
 
 func main() {
 	appState = state{users: make(map[string]user)}
-	appState.AddUser(user{Name: "Henk", Points: 1337})
 
-	handle("/user", func() interface{} {
-		return appState.GetUsers()
+	handle("/user", func(r *http.Request) interface{} {
+		switch r.Method {
+		case "GET": return appState.GetUsers()
+		case "POST":
+			user := ParseUser(r.Body)
+			appState.AddUser(user)
+			return user
+		}
+
+		return nil
 	})
 
 	log.Fatal(http.ListenAndServe(":1337", nil))
