@@ -1,8 +1,8 @@
 package main
 
 type user struct {
-	name   string
-	points int
+	Name   string
+	Points int
 }
 
 type role struct {

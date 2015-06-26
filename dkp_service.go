@@ -6,9 +6,19 @@ type state struct {
 }
 
 func (s *state) AddUser(user user) {
-	s.users[user.name] = user
+	s.users[user.Name] = user
 }
 
 func (s *state) GetUser(name string) user {
 	return s.users[name]
+}
+
+func (s *state) GetUsers() []user {
+	result := make([]user, 0, len(s.users))
+
+	for  _, user := range s.users {
+		result = append(result, user)
+	}
+
+	return result
 }
