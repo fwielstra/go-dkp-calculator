@@ -1,18 +1,17 @@
 package main
 
-
-type User struct {
-    name string
-    points int
+type user struct {
+	name   string
+	points int
 }
 
-type Role struct {
-  name string
-  value int
+type role struct {
+	name  string
+	value int
 }
 
-type Event struct {
-  name string
-  roles []Role
-  users []User
+type event struct {
+	name  string
+	roles []role
+	users []user
 }
